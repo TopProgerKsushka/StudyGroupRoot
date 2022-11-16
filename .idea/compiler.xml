@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="17">
+      <module name="client" target="17" />
+      <module name="client.main" target="17" />
+      <module name="client.test" target="17" />
+      <module name="group" target="17" />
+      <module name="group.main" target="17" />
+      <module name="group.test" target="17" />
+      <module name="isu" target="17" />
+      <module name="isu.main" target="17" />
+      <module name="isu.test" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

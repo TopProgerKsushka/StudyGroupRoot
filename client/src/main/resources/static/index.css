@@ -1,0 +1,466 @@
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('/font/LiberationSans-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('/font/LiberationSans-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('/font/LiberationSans-Italic.ttf') format('truetype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Liberation Sans';
+  src: url('/font/LiberationSans-BoldItalic.ttf') format('truetype');
+  font-weight: bold;
+  font-style: italic;
+}
+
+body {
+  background-color: black;
+  color: white;
+  font-family: 'Liberation Sans', sans-serif;
+  overflow: hidden;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 5px;
+  background-color: #3f4248;
+}
+
+*::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #555b62;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:visited {
+  color: white;
+}
+
+/**************************************************************************************************/
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+div.centered {
+  text-align: center;
+}
+
+div.centered > div {
+  display: inline-block;
+  margin: auto;
+}
+
+/**************************************************************************************************/
+
+.skipsplash {
+  display: inline-block;
+  position: absolute;
+  z-index: 1;
+  right: 10px;
+  bottom: 10px;
+}
+
+/**************************************************************************************************/
+
+.background {
+  position: absolute;
+  background-color: #2a2e32;
+  z-index: 2;
+  left: 0px;
+  top: 0px;
+  width: 100vw;
+  height: 100vh;
+  padding: 30px;
+  opacity: 1;
+}
+
+.page {
+  width: 50em;
+  height: 92%;
+  overflow-y: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.wide-page {
+  width: 70em;
+}
+
+.hidden {
+  display: none;
+}
+
+.hiding-left {
+  animation-name: hide-left;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+.hiding-right {
+  animation-name: hide-right;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+.showing-left {
+  animation-name: show-left;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+.showing-right {
+  animation-name: show-right;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+@keyframes hide-left {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+}
+
+@keyframes hide-right {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+}
+
+@keyframes show-left {
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes show-right {
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+input[type=button] {
+  font-size: 14pt;
+  padding: 5px 15px;
+  background-color: #33373b;
+  min-width: 12px;
+  border: none;
+  color: white;
+}
+
+input[type=button]:hover {
+  background-color: #3a3f44;
+}
+
+input[type=button]:active {
+  background-color: #35393f;
+}
+
+input[type=button]:disabled {
+  background-color: #3e3e3e;
+}
+
+.wide-button {
+  height: 50px;
+  line-height: 50px;
+  font-size: 14pt;
+  background-color: #33373b;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 0 20px 0 20px;
+  cursor: pointer;
+}
+
+.wide-button:hover {
+  background-color: #3a3f44;
+}
+
+.wide-button:active {
+  background-color: #35393f;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.back-button {
+  display: inline-block;
+  line-height: 1em;
+  font-size: 18pt;
+  padding: 6px 9px;
+  font-weight: 800;
+  background-color: #33373b;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #3a3f44;
+}
+
+.back-button:active {
+  background-color: #35393f;
+}
+
+/* form {
+  display: block;
+} */
+
+label {
+  font-size: 14pt;
+}
+
+.label {
+  font-size: 14pt;
+}
+
+.header {
+  margin-top: 15px;
+}
+
+input:not([type=button]), select {
+  height: 30px;
+  font-size: 14pt;
+
+  background-color: #222529;
+  border: solid 1px white;
+  border-radius: 6px;
+  color: white;
+  padding: 0 10px;
+}
+
+input:not([type=button]).wrong, select.wrong {
+  background-color: #4a3131;
+}
+
+input:not([type=button]).shake, select.shake {
+  animation-name: wrong-shake;
+  animation-duration: 0.3s;
+}
+
+@keyframes wrong-shake {
+  from {
+    transform: translateX(0);
+  }
+
+  20% {
+    transform: translateX(-5px);
+  }
+
+  40% {
+    transform: translateX(5px);
+  }
+
+  60% {
+    transform: translateX(-5px);
+  }
+
+  80% {
+    transform: translateX(5px);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+input:not([type=button]):focus, select:focus {
+  outline: none;
+  border: solid 1px lightsalmon;
+  border-radius: 6px;
+}
+
+form div.field {
+  display: flex;
+  flex-direction: row;
+  column-gap: 20px;
+  align-items: center;
+  padding: 6px 0;
+}
+
+form div.field.with-button {
+  align-items: end;
+}
+
+form div.field input:not([type=button]),
+form div.field select,
+form div.field .input-wrapper {
+  flex: 1;
+}
+
+.input-wrapper input {
+  flex: none;
+  width: calc(100% - 20px);
+}
+
+.input-wrapper select {
+  flex: none;
+  width: 100%;
+}
+
+form label {
+  display: inline-block;
+  width: 200px;
+  line-height: 30px;
+}
+
+.indent {
+  margin-left: 20px;
+}
+
+form .indent label {
+  width: 180px;
+}
+
+.spinner {
+  margin: 15px 0;
+  height: 40px;
+}
+
+#list-order-by, #list-filter-by {
+  height: 150px;
+}
+
+.vertical-toolbar {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}
+
+.vertical-toolbar .gap {
+  height: 5px;
+}
+
+/**************************************************************************************************/
+
+#balloon-layer {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  width: 97%;
+  height: 100%;
+  padding: 30px;
+  pointer-events: none;
+}
+
+.balloon {
+  display: inline-block;
+  position: relative;
+  float: right;
+  clear: right;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: linear-gradient(180deg, #f17b6e 0%, #de5a47 100%);
+  color: white;
+  border-radius: 20px;
+
+  animation-name: balloon-appear, balloon-disappear;
+  animation-duration: 0.5s, 2s;
+  animation-delay: 0s, 5s;
+  animation-fill-mode: forwards, forwards;
+}
+
+@keyframes balloon-appear {
+  from {
+    right: -30px;
+    opacity: 0;
+  }
+
+  to {
+    right: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes balloon-disappear {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/**************************************************************************************************/
+
+table {
+  width: 100%;
+  text-align: center;
+  border-spacing: 0;
+  -webkit-border-horizontal-spacing: 1px;
+}
+
+thead {
+  background: #353b40;
+  font-weight: 800;
+}
+
+td {
+  height: 30px;
+}
+
+tbody tr {
+  background: #3f464c;
+}
+
+tbody tr:nth-child(even) {
+  background: #353b40;
+}
+
+/**************************************************************************************************/
+
+#huge-number {
+  font-size: 250pt;
+  font-weight: 800;
+}

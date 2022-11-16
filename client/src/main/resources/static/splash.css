@@ -1,0 +1,129 @@
+div.splash-1 {
+  position: absolute;
+  display: inline-block;
+  margin-left: 35vw;
+  margin-top: 32vh;
+  transform-origin: bottom left;
+  transform: rotate(-90deg);
+}
+
+div.splash-1 span.s1 {
+  position: relative;
+  display: block;
+
+  font-size: 7.7vh;
+  line-height: 10vh;
+  font-weight: 800;
+}
+
+div.splash-1 span.s2 {
+  position: relative;
+  top: -2vh;
+  font-size: 12.3vh;
+  line-height: 12.3vh;
+
+  background: linear-gradient(90deg, red 0%, orange 16.6%, yellow 33.3%, green 50%, aqua 66.6%, blue 83.3%, fuchsia 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+div.splash-1 span.s3 {
+  position: relative;
+  top: -15vh;
+  left: 5vh;
+  display: inline-block;
+  transform-origin: top left;
+  transform: rotate(90deg);
+
+  font-size: 3.7vh;
+  line-height: 3.7vh;
+}
+
+div.splash-1 span.s4 {
+  position: relative;
+
+  font-size: 4.3vh;
+  line-height: 4.3vh;
+  margin-right: 1vh;
+}
+
+div.splash-1 span.s5 {
+  position: relative;
+
+  font-size: 4.3vh;
+  line-height: 4.3vh;
+  text-decoration: underline;
+}
+
+div.splash-1 div.d6 span {
+  position: relative;
+  display: inline-block;
+
+  font-size: 16.4vh;
+  font-weight: 800;
+}
+
+div.splash-2 {
+  position: absolute;
+  display: inline-block;
+
+  margin-left: 35vw;
+  margin-top: 15vh;
+}
+
+div.splash-2 span.s1 {
+  position: relative;
+  display: block;
+
+  font-size: 30vh;
+  line-height: 22vh;
+  font-weight: 800;
+}
+
+div.splash-2 span.s2 {
+  position: relative;
+  display: block;
+
+  font-size: 12vh;
+  line-height: 10vh;
+}
+
+div.splash-2 span.s3 {
+  position: relative;
+  display: block;
+
+  font-size: 9.5vh;
+  line-height: 9.5vh;
+}
+
+div.splash-2 span.s4 {
+  position: relative;
+  display: block;
+
+  font-size: 13vh;
+  line-height: 11vh;
+  font-weight: 800;
+
+  color: lightpink;
+}
+
+div.splash-2 span.s5 {
+  position: relative;
+  display: block;
+
+  font-size: 11.3vh;
+  line-height: 8vh;
+}
+
+div.splash-3 {
+  position: absolute;
+  display: inline-block;
+
+  margin-left: 58vw;
+  margin-top: 15vh;
+}
+
+div.splash-3 > object {
+  height: 62vh;
+}

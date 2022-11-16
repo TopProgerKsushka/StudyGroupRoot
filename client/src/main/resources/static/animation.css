@@ -1,0 +1,558 @@
+div.splash-1 span {
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+div.splash-2 span {
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+/********************************************* ОЧЕНЬ **********************************************/
+
+div.splash-1 span.s1 {
+  animation-name: splash-1-s1-slidein;
+  animation-delay: 0.5s;
+  animation-duration: 0.2s;
+}
+
+@keyframes splash-1-s1-slidein {
+  from {
+    top: -200vh;
+  }
+
+  80% {
+    top: 2vh;
+  }
+
+  to {
+    top: 0vh;
+  }
+}
+
+/******************************************** КРАСИВЫЙ ********************************************/
+
+div.splash-1 span.s2 {
+  animation-name: splash-1-s2-slidein;
+  animation-delay: 1s;
+  animation-duration: 0.2s;
+}
+
+@keyframes splash-1-s2-slidein {
+  from {
+    left: -200vh;
+  }
+
+  80% {
+    left: 2vh;
+  }
+
+  to {
+    left: 0vh;
+  }
+}
+
+/******************************************* И ГЛАВНОЕ ********************************************/
+
+div.splash-1 span.s3 {
+  animation-name: splash-1-s3-slidein;
+  animation-delay: 1.8s;
+  animation-duration: 0.2s;
+}
+
+@keyframes splash-1-s3-slidein {
+  from {
+    top: -200vh;
+  }
+
+  80% {
+    top: -13vh;
+  }
+
+  to {
+    top: -15vh;
+  }
+}
+
+/*************************************** НЕВЕРОЯТНО НУЖНЫЙ ****************************************/
+
+div.splash-1 span.s4 {
+  animation-name: splash-1-s4-slidein;
+  animation-delay: 2.7s;
+  animation-duration: 0.2s;
+}
+
+@keyframes splash-1-s4-slidein {
+  from {
+    left: -200vh;
+  }
+
+  80% {
+    left: 2vh;
+  }
+
+  to {
+    left: 0vh;
+  }
+}
+
+/***************************************** В ЭТОМ ПРОЕКТЕ *****************************************/
+
+div.splash-1 span.s5 {
+  animation-name: splash-1-s5-slidein;
+  animation-delay: 3s;
+  animation-duration: 0.2s;
+}
+
+@keyframes splash-1-s5-slidein {
+  from {
+    left: 200vh;
+  }
+
+  80% {
+    left: -2vh;
+  }
+
+  to {
+    left: 0vh;
+  }
+}
+
+/********************************************* ФРОНТ **********************************************/
+
+div.splash-1 span.s6-1 {
+  animation-name: splash-1-s6-1-slidein;
+  animation-delay: 3.7s;
+  animation-duration: 0.2s;
+}
+
+@keyframes splash-1-s6-1-slidein {
+  from {
+    left: -200vh;
+  }
+
+  80% {
+    left: 2vh;
+  }
+
+  to {
+    left: 0vh;
+  }
+}
+
+div.splash-1 span.s6-2 {
+  animation: splash-1-s6-2-3-slidein;
+  animation-delay: 3.9s;
+  animation-duration: 0.2s;
+
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+div.splash-1 span.s6-3 {
+  animation: splash-1-s6-2-3-slidein, splash-1-s6-3-rotate;
+  animation-delay: 3.9s, 4.5s;
+  animation-duration: 0.2s, 0.05s;
+
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+@keyframes splash-1-s6-2-3-slidein {
+  from {
+    top: 200vh;
+  }
+
+  80% {
+    top: -2vh;
+  }
+
+  to {
+    top: 0vh;
+  }
+}
+
+@keyframes splash-1-s6-3-rotate {
+  from {
+    transform: rotate(90deg);
+  }
+
+  80% {
+    transform: rotate(-10deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+div.splash-1 span.s6-4 {
+  animation-name: splash-1-s6-4-slidein;
+  animation-delay: 4.1s;
+  animation-duration: 0.2s;
+}
+
+@keyframes splash-1-s6-4-slidein {
+  from {
+    left: 200vh;
+  }
+
+  80% {
+    left: -2vh;
+  }
+
+  to {
+    left: 0vh;
+  }
+}
+
+
+/*************************************** [LEFT SPLASH PART] ***************************************/
+
+
+div.splash-1 {
+  animation-name: splash-1-rotate, splash-1-2-jump;
+  animation-delay: 5s, 6.7s;
+  animation-duration: 0.2s, 0.2s;
+  animation-fill-mode: both;
+}
+
+@keyframes splash-1-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(-90deg);
+  }
+}
+
+/*************************************** [RIGHT SPLASH PART] **************************************/
+
+div.splash-2 {
+  animation-name: splash-1-2-jump;
+  animation-delay: 6.7s;
+  animation-duration: 0.2s;
+}
+
+/**************************************************************************************************/
+
+@keyframes splash-1-2-jump {
+  from {
+    top: 0vh;
+  }
+
+  50% {
+    top: -10vh;
+  }
+
+  to {
+    top: 0vh;
+  }
+}
+
+/******************************************* НА ***************************************************/
+
+div.splash-2 span.s1 {
+  animation-name: splash-2-s1-slidein, splash-2-s1-jump-1, splash-2-s1-jump-2, splash-2-s1-jump-3, splash-2-s1-jump-4;
+  animation-delay: 4.9s, 5.3s, 5.6s, 5.9s, 6.2s;
+  animation-duration: 0.2s, 0.05s, 0.05s, 0.05s, 0.05s;
+  animation-fill-mode: both, forwards, forwards, forwards, forwards;
+}
+
+@keyframes splash-2-s1-slidein {
+  from {
+    top: 40vh;
+    left: 200vh;
+  }
+
+  80% {
+    top: 40vh;
+    left: -2vh;
+  }
+
+  to {
+    top: 40vh;
+    left: 0vh;
+  }
+}
+
+@keyframes splash-2-s1-jump-1 {
+  from {
+    top: 40vh;
+  }
+
+  90% {
+    top: 20vh;
+  }
+
+  to {
+    top: 30vh;
+  }
+}
+
+@keyframes splash-2-s1-jump-2 {
+  from {
+    top: 30vh;
+  }
+
+  90% {
+    top: 10vh;
+  }
+
+  to {
+    top: 20vh;
+  }
+}
+
+@keyframes splash-2-s1-jump-3 {
+  from {
+    top: 20vh;
+  }
+
+  90% {
+    top: 0vh;
+  }
+
+  to {
+    top: 10vh;
+  }
+}
+
+@keyframes splash-2-s1-jump-4 {
+  from {
+    top: 10vh;
+  }
+
+  90% {
+    top: -10vh;
+  }
+
+  to {
+    top: 0vh;
+  }
+}
+
+/***************************************** КОТОРЫЙ ************************************************/
+
+div.splash-2 span.s2 {
+  animation-name: splash-2-s2-slidein, splash-2-s2-jump-1, splash-2-s2-jump-2, splash-2-s2-jump-3;
+  animation-delay: 5.2s, 5.6s, 5.9s, 6.2s;
+  animation-duration: 0.2s, 0.05s, 0.05s, 0.05s;
+  animation-fill-mode: both, forwards, forwards, forwards;
+}
+
+@keyframes splash-2-s2-slidein {
+  from {
+    top: 200vh;
+  }
+
+  80% {
+    top: 27vh;
+  }
+
+  to {
+    top: 29vh;
+  }
+}
+
+@keyframes splash-2-s2-jump-1 {
+  from {
+    top: 29vh;
+  }
+
+  90% {
+    top: 10vh;
+  }
+
+  to {
+    top: 20vh;
+  }
+}
+
+@keyframes splash-2-s2-jump-2 {
+  from {
+    top: 20vh;
+  }
+
+  90% {
+    top: 0vh;
+  }
+
+  to {
+    top: 10vh;
+  }
+}
+
+@keyframes splash-2-s2-jump-3 {
+  from {
+    top: 10vh;
+  }
+
+  90% {
+    top: -10vh;
+  }
+
+  to {
+    top: 0vh;
+  }
+}
+
+/***************************************** ПОТРАЧЕНА **********************************************/
+
+div.splash-2 span.s3 {
+  animation-name: splash-2-s3-slidein, splash-2-s3-jump-1, splash-2-s3-jump-2;
+  animation-delay: 5.5s, 5.9s, 6.2s;
+  animation-duration: 0.2s, 0.05s, 0.05s;
+  animation-fill-mode: both, forwards, forwards;
+}
+
+@keyframes splash-2-s3-slidein {
+  from {
+    top: 200vh;
+  }
+
+  80% {
+    top: 18vh;
+  }
+
+  to {
+    top: 20vh;
+  }
+}
+
+@keyframes splash-2-s3-jump-1 {
+  from {
+    top: 20vh;
+  }
+
+  90% {
+    top: 0vh;
+  }
+
+  to {
+    top: 10vh;
+  }
+}
+
+@keyframes splash-2-s3-jump-2 {
+  from {
+    top: 10vh;
+  }
+
+  90% {
+    top: -10vh;
+  }
+
+  to {
+    top: 0vh;
+  }
+}
+
+/********************************************* КУЧА ***********************************************/
+
+div.splash-2 span.s4 {
+  animation-name: splash-2-s4-slidein, splash-2-s4-jump;
+  animation-delay: 5.8s, 6.2s;
+  animation-duration: 0.2s, 0.05s;
+  animation-fill-mode: both, forwards;
+}
+
+@keyframes splash-2-s4-slidein {
+  from {
+    top: 200vh;
+  }
+
+  80% {
+    top: 8vh;
+  }
+
+  to {
+    top: 10vh;
+  }
+}
+
+@keyframes splash-2-s4-jump {
+  from {
+    top: 10vh;
+  }
+
+  90% {
+    top: -10vh;
+  }
+
+  to {
+    top: 0vh;
+  }
+}
+
+/******************************************** ВРЕМЕНИ *********************************************/
+
+div.splash-2 span.s5 {
+  animation-name: splash-2-s5-slidein;
+  animation-delay: 6.1s;
+  animation-duration: 0.2s;
+}
+
+@keyframes splash-2-s5-slidein {
+  from {
+    top: 200vh;
+  }
+
+  80% {
+    top: -2vh;
+  }
+
+  to {
+    top: 0vh;
+  }
+}
+
+/******************************************* HOURGLASS ********************************************/
+
+div.splash-3 {
+  animation-name: splash-3-drop;
+  animation-delay: 6.5s;
+  animation-duration: 0.4s;
+  animation-fill-mode: both;
+  animation-timing-function: linear;
+}
+
+@keyframes splash-3-drop {
+  from {
+    top: -200vh;
+  }
+
+  50% {
+    top: 0vh;
+  }
+
+  75% {
+    top: -10vh;
+  }
+
+  to {
+    top: 0vh;
+  }
+}
+
+/******************************************* BACKGROUND *******************************************/
+
+.background {
+  animation-name: background-uprise;
+  animation-delay: 8.5s;
+  animation-duration: 0.7s;
+  animation-fill-mode: backwards;
+}
+
+@keyframes background-uprise {
+  from {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
