@@ -71,7 +71,7 @@ public class FrontendController {
             return FrontendResult.balloon("Необходимо указать ID");
         }
         RestTemplate rt = restTemplate();
-        final String url = "https://localhost:" + groupPort + "/api/group/get?id={id}";
+        final String url = "https://localhost:" + groupPort + "/api/group/{id}";
 
         try {
             ResponseEntity<StudyGroup> resp = rt.getForEntity(url, StudyGroup.class, id);
@@ -95,7 +95,7 @@ public class FrontendController {
                          @RequestParam(required = false, defaultValue = "id") String orderBy,
                          @RequestParam(required = false) String filterBy) throws Exception {
         RestTemplate rt = restTemplate();
-        final String url = "https://localhost:" + groupPort + "/api/group/getAll?" +
+        final String url = "https://localhost:" + groupPort + "/api/group?" +
                 "pageNumber={pageNumber}&pageSize={pageSize}&sortType={sortType}&orderBy={orderBy}&filterBy={filterBy}";
         try {
             ResponseEntity<StudyGroup[]> resp = rt.getForEntity(url, StudyGroup[].class, pageNumber, pageSize, sortType, orderBy, filterBy);
@@ -117,7 +117,7 @@ public class FrontendController {
             return FrontendResult.balloon("Необходимо указать ID");
         }
         RestTemplate rt = restTemplate();
-        final String url = "https://localhost:" + groupPort + "/api/group/delete?id={id}";
+        final String url = "https://localhost:" + groupPort + "/api/group/{id}";
         try {
             rt.delete(url, id);
             return FrontendResult.goHome();
@@ -156,7 +156,7 @@ public class FrontendController {
         else group.setGroupAdmin(null);
 
         RestTemplate rt = restTemplate();
-        final String url = "https://localhost:" + groupPort + "/api/group/put?id={id}";
+        final String url = "https://localhost:" + groupPort + "/api/group/{id}";
 
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -206,7 +206,7 @@ public class FrontendController {
         else group.setGroupAdmin(null);
 
         RestTemplate rt = restTemplate();
-        final String url = "https://localhost:" + groupPort + "/api/group/add";
+        final String url = "https://localhost:" + groupPort + "/api/group";
 
         try {
             HttpHeaders headers = new HttpHeaders();
@@ -231,7 +231,7 @@ public class FrontendController {
     @PostMapping("/count_higher_semester")
     public @ResponseBody FrontendResult countHigherSemester(@RequestParam Semester semesterEnum) throws Exception {
         RestTemplate rt = restTemplate();
-        final String url = "https://localhost:" + groupPort + "/api/group/count_higher_semester?semester={semester}";
+        final String url = "https://localhost:" + groupPort + "/api/group/semester/{semester}";
         try {
             ResponseEntity<Integer> resp = rt.getForEntity(url, Integer.class, semesterEnum);
             if (resp.getBody() == null) return FrontendResult.balloon("Пустой ответ от API");
@@ -246,7 +246,7 @@ public class FrontendController {
     @PostMapping("/get_starts_from")
     public @ResponseBody FrontendResult getStartsFrom(@RequestParam String prefix) throws Exception {
         RestTemplate rt = restTemplate();
-        final String url = "https://localhost:" + groupPort + "/api/group/get_starts_from?prefix={prefix}";
+        final String url = "https://localhost:" + groupPort + "/api/group/prefix?prefix={prefix}";
         try {
             ResponseEntity<StudyGroup[]> resp = rt.getForEntity(url, StudyGroup[].class, prefix);
             if (resp.getBody() == null) return FrontendResult.balloon("Пустой ответ от API");
@@ -261,7 +261,7 @@ public class FrontendController {
     @PostMapping("/get_unique_forms")
     public @ResponseBody FrontendResult getUniqueForms(ModelMap m) throws Exception {
         RestTemplate rt = restTemplate();
-        final String url = "https://localhost:" + groupPort + "/api/group/get_unique_forms";
+        final String url = "https://localhost:" + groupPort + "/api/group/edu_forms";
         try {
             ResponseEntity<FormOfEducation[]> resp = rt.getForEntity(url, FormOfEducation[].class);
             FormOfEducation[] forms = resp.getBody();
@@ -296,7 +296,7 @@ public class FrontendController {
             return FrontendResult.balloon("Необходимо указать ID");
         }
         RestTemplate rt = restTemplate();
-        final String url = "https://localhost:" + isuPort + "/api/isu/group/change_edu_form?id={id}&eduForm={formOfEducation}";
+        final String url = "https://localhost:" + isuPort + "/api/isu/group/{id}/form?form={formOfEducation}";
         try {
             ResponseEntity<StudyGroup> resp = rt.exchange(url, HttpMethod.PUT, HttpEntity.EMPTY, StudyGroup.class, id, formOfEducation);
             return FrontendResult.goHome();

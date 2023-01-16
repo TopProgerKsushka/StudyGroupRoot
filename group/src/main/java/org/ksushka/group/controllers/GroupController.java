@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/group")
+@RequestMapping("/api")
 public class GroupController {
     static LinkedList<StudyGroup> groups = new LinkedList<>();
 
@@ -23,7 +23,7 @@ public class GroupController {
     @Autowired
     ParseService parseService;
 
-    @GetMapping(value = "getAll", produces = MediaType.APPLICATION_XML_VALUE)
+    @GetMapping(value = "group", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<List<StudyGroup>> getAll(
             @RequestParam(required = false) Integer pageNumber,
             @RequestParam(required = false) Integer pageSize,
@@ -65,7 +65,7 @@ public class GroupController {
         return new ResponseEntity<>(tempGroups, HttpStatus.OK);
     }
 
-    @PostMapping(value = "add", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
+    @PostMapping(value = "group", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<StudyGroup> add(@RequestBody StudyGroup group) {
 
         if (!matchService.studyGroup(group)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -85,22 +85,20 @@ public class GroupController {
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
-    @GetMapping(value = "get", produces = MediaType.APPLICATION_XML_VALUE)
-    public ResponseEntity<StudyGroup> get(@RequestParam int id) {
+    @GetMapping(value = "group/{id}", produces = MediaType.APPLICATION_XML_VALUE)
+    public ResponseEntity<StudyGroup> get(@PathVariable int id) {
         if (groups.isEmpty() || id > groups.getLast().getId()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Optional<StudyGroup> item = groups.stream().filter(g -> g.getId() == id).findFirst();
 
         try {
-            return new ResponseEntity<>(item.get(), HttpStatus.OK);
+            return item.map(studyGroup -> new ResponseEntity<>(studyGroup, HttpStatus.OK)).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
         } catch (IndexOutOfBoundsException ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (NoSuchElementException ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-    @PutMapping(value = "put", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
-    public ResponseEntity<StudyGroup> put(@RequestParam int id, @RequestBody StudyGroup group) {
+    @PutMapping(value = "group/{id}", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_XML_VALUE)
+    public ResponseEntity<StudyGroup> put(@PathVariable int id, @RequestBody StudyGroup group) {
         if (!matchService.studyGroup(group)) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         int listId = -1;
@@ -122,8 +120,8 @@ public class GroupController {
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "delete")
-    public ResponseEntity<Object> delete(@RequestParam int id) {
+    @DeleteMapping(value = "group/{id}")
+    public ResponseEntity<Object> delete(@PathVariable int id) {
         if (groups.isEmpty() || id > groups.getLast().getId()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         Optional<StudyGroup> item = groups.stream().filter(g -> g.getId() == id).findFirst();
         if (item.isPresent()) {
@@ -134,8 +132,8 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("count_higher_semester")
-    public ResponseEntity<Integer> countHigherSemester(@RequestParam String semester) {
+    @GetMapping("group/semester/{semester}")
+    public ResponseEntity<Integer> countHigherSemester(@PathVariable String semester) {
         Semester semesterValue;
         try {
             semesterValue = Semester.valueOf(semester);
@@ -151,7 +149,7 @@ public class GroupController {
         return new ResponseEntity<>(count, HttpStatus.OK);
     }
 
-    @GetMapping(value = "get_starts_from", produces = MediaType.APPLICATION_XML_VALUE)
+    @GetMapping(value = "group/prefix", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<List<StudyGroup>> getStartsFrom(@RequestParam String prefix) {
         if (prefix == null) prefix = "";
         List<StudyGroup> tempGroups = new ArrayList<>();
@@ -163,28 +161,28 @@ public class GroupController {
         return new ResponseEntity<>(tempGroups, HttpStatus.OK);
     }
 
-    @GetMapping(value = "get_unique_forms", produces = MediaType.APPLICATION_XML_VALUE)
+    @GetMapping(value = "group/edu_forms", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<HashSet<FormOfEducation>> getStartsFrom() {
         HashSet<FormOfEducation> set = new HashSet<>();
         for (StudyGroup group : groups) set.add(group.getFormOfEducation());
         return new ResponseEntity<>(set, HttpStatus.OK);
     }
 
-    @PutMapping(value = "change_edu_form", produces = MediaType.APPLICATION_XML_VALUE)
-    public ResponseEntity<StudyGroup> changeEduForm(@RequestParam Integer id, @RequestParam FormOfEducation eduForm) {
-        int listId = -1;
-        for (int i = 0; i < groups.size(); i++) {
-            if (groups.get(i).getId() == id) {
-                listId = i;
-                break;
-            }
-        }
-
-        if (listId == -1) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        groups.get(listId).setFormOfEducation(eduForm);
-
-        return new ResponseEntity<>(groups.get(listId), HttpStatus.OK);
-    }
+//    @PutMapping(value = "change_edu_form", produces = MediaType.APPLICATION_XML_VALUE)
+//    public ResponseEntity<StudyGroup> changeEduForm(@RequestParam Integer id, @RequestParam FormOfEducation eduForm) {
+//        int listId = -1;
+//        for (int i = 0; i < groups.size(); i++) {
+//            if (groups.get(i).getId() == id) {
+//                listId = i;
+//                break;
+//            }
+//        }
+//
+//        if (listId == -1) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        groups.get(listId).setFormOfEducation(eduForm);
+//
+//        return new ResponseEntity<>(groups.get(listId), HttpStatus.OK);
+//    }
 
     @GetMapping("count_expelled")
     public ResponseEntity<Integer> countExpelled() {

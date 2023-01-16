@@ -3,15 +3,12 @@ package org.ksushka.isu.controllers;
 import org.apache.http.client.HttpClient;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.ksushka.isu.CheckService;
-import org.ksushka.isu.LoggingRequestInterceptor;
-import org.ksushka.isu.model.Coordinates;
 import org.ksushka.isu.model.FormOfEducation;
 import org.ksushka.isu.model.StudyGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -22,7 +19,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 
 import javax.net.ssl.SSLContext;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,21 +57,21 @@ public class IsuController {
         return restTemplate;
     }
 
-    @PutMapping(value = "group/change_edu_form", produces = MediaType.APPLICATION_XML_VALUE)
-    public ResponseEntity<StudyGroup> changeForm(@RequestParam Integer id,
-                                                 @RequestParam FormOfEducation eduForm) throws Exception {
+    @PutMapping(value = "group/{id}/form", produces = MediaType.APPLICATION_XML_VALUE)
+    public ResponseEntity<StudyGroup> changeForm(@PathVariable Integer id,
+                                                 @RequestParam FormOfEducation form) throws Exception {
         try {
             RestTemplate rt = restTemplate();
-            String url = "https://localhost:" + groupPort + "/api/group/get?id={id}";
+            String url = "https://localhost:" + groupPort + "/api/group/{id}";
             StudyGroup studyGroup = rt.getForObject(url, StudyGroup.class, id);
             if (studyGroup == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-            studyGroup.setFormOfEducation(eduForm);
+            studyGroup.setFormOfEducation(form);
             studyGroup.setCreationDate(null);
             studyGroup.setId(null);
 
             RestTemplate rt1 = restTemplate();
-            url = "https://localhost:" + groupPort + "/api/group/put?id={id}";
+            url = "https://localhost:" + groupPort + "/api/group/{id}";
             HttpHeaders headers = new HttpHeaders();
             List<MediaType> mt = new ArrayList<>(1);
             mt.add(MediaType.APPLICATION_XML);
@@ -95,11 +91,11 @@ public class IsuController {
         }
     }
 
-    @GetMapping("/statistics/count_expelled")
+    @GetMapping("statistics/count_expelled")
     public ResponseEntity<Integer> countExpelled() throws Exception {
         try {
             RestTemplate rt = restTemplate();
-            final String url = "https://localhost:" + groupPort + "/api/group/count_expelled";
+            final String url = "https://localhost:" + groupPort + "/api/count_expelled";
             ResponseEntity<Integer> resp = rt.getForEntity(url, Integer.class);
 
             //if (resp == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
