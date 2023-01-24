@@ -1,0 +1,24 @@
+server:
+  port: 0
+#  ssl:
+#    key-store: classpath:keystore/KsuLabut.p12
+#    key-store-type: PKCS12
+#    key-store-password: password
+#    key-alias: KsuLabut
+
+trust:
+  store: classpath:keystore/KsuLabut.p12
+  store-password: password
+
+spring:
+  application:
+    name: isu-instance
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${random.uuid}
+#    non-secure-port-enabled: false
+#    secure-port-enabled: true
+#    secure-port: ${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

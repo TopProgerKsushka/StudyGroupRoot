@@ -1,7 +1,8 @@
 plugins {
-    id 'org.springframework.boot' version '2.7.4'
-    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
     id 'java'
+    id 'war'
+    id 'org.springframework.boot' version '3.0.1'
+    id 'io.spring.dependency-management' version '1.1.0'
 }
 
 group = 'org.ksushka'
@@ -15,11 +16,20 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-freemarker'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.14.0-rc1'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootWar {
+    archiveFileName = "client.war"
+}
+
+configurations {
+    all*.exclude module : 'logback-classic'
 }

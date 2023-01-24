@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group = 'org.ksushka'
+version = '0.0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'jakarta.ejb:jakarta.ejb-api:4.0.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.14.1'
+}
+
+jar {
+    archiveFileName = "ejb.jar"
+}

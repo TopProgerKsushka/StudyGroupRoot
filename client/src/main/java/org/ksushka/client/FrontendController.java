@@ -1,13 +1,24 @@
 package org.ksushka.client;
 
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.ssl.SSLContextBuilder;
+// import org.apache.http.impl.client.HttpClients;
+
+// import org.apache.http.ssl.SSLContextBuilder;
 import org.ksushka.client.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
-import org.apache.http.client.HttpClient;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.client5.http.config.TlsConfig;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.io.HttpClientConnectionManager;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.TrustSelfSignedStrategy;
+import org.apache.hc.core5.http.ssl.TLS;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.apache.hc.core5.util.Timeout;
+// import org.apache.http.client.HttpClient;
+// import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
@@ -18,7 +29,9 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.net.ssl.SSLContext;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,11 +54,18 @@ public class FrontendController {
 
     RestTemplate restTemplate() throws Exception {
         SSLContext sslContext = new SSLContextBuilder()
-                .loadTrustMaterial(trustStore.getURL(), trustStorePassword.toCharArray())
+                .loadTrustMaterial(trustStore.getURL(), trustStorePassword.toCharArray(), new TrustSelfSignedStrategy())
                 .build();
         SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
-        HttpClient httpClient = HttpClients.custom()
+        HttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder.create()
                 .setSSLSocketFactory(socketFactory)
+                .setDefaultTlsConfig(TlsConfig.custom()
+                        .setHandshakeTimeout(Timeout.ofSeconds(30))
+                        .setSupportedProtocols(TLS.V_1_0, TLS.V_1_1, TLS.V_1_2, TLS.V_1_3)
+                        .build())
+                .build();
+        HttpClient httpClient = HttpClients.custom()
+                .setConnectionManager(cm)
                 .build();
         HttpComponentsClientHttpRequestFactory factory =
                 new HttpComponentsClientHttpRequestFactory(httpClient);
@@ -224,7 +244,7 @@ public class FrontendController {
         } catch (HttpClientErrorException ex) {
             return FrontendResult.balloon("Неизвестная ошибка API");
         } catch (RestClientException ex) {
-            return FrontendResult.balloon("Не удаётся получить доступ к API");
+            return FrontendResult.balloon("Не удаётся получить доступ к API" + ex.getMessage());
         }
     }
 
@@ -259,7 +279,7 @@ public class FrontendController {
     }
 
     @PostMapping("/get_unique_forms")
-    public @ResponseBody FrontendResult getUniqueForms(ModelMap m) throws Exception {
+    public @ResponseBody FrontendResult getUniqueForms() throws Exception {
         RestTemplate rt = restTemplate();
         final String url = "https://localhost:" + groupPort + "/api/group/edu_forms";
         try {

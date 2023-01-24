@@ -257,9 +257,13 @@ window.onload = () => {
       }
 
       if (validateForm(form)) {
+        let data = new FormData(form);
+        if (data.entries().next().done) {
+          data = undefined;
+        }
         const resp = await fetch(form.action, {
           method: form.method,
-          body: new FormData(form),
+          body: data,
         });
         const respData = await resp.json();
         if (respData.action === 'goHome') {

@@ -1,0 +1,13 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: isu-config
+
+  cloud:
+    config:
+      enabled: true
+      server:
+        git:
+          uri: https://github.com/TopProgerKsushka/StudyGroup-isu-config.git
+          clone-on-start: true

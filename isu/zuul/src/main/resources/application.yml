@@ -1,0 +1,20 @@
+server:
+  port: 8094
+  ssl:
+    key-store: classpath:keystore/KsuLabut.p12
+    key-store-type: PKCS12
+    key-store-password: password
+    key-alias: KsuLabut
+spring:
+  application:
+    name: isu-zuul
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+zuul:
+  routes:
+    api:
+      path: /api/**
+      service-id: isu-instance
+      strip-prefix: false
