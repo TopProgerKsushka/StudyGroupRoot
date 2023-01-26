@@ -32,10 +32,12 @@ echo '>>> Starting Zuul proxy'
 (/usr/lib/jvm/java-11-openjdk/bin/java -jar /root/app/isu-zuul.jar > /root/logs/isu-zuul.log 2>&1 &)
 tail -f -n0 /root/logs/isu-zuul.log | grep -qe 'Started ZuulProxyApplication'
 
-
+echo '>>> Starting client application'
 (/usr/lib/jvm/java-17-openjdk/bin/java -jar /root/app/client.jar > /root/logs/client.log 2>&1 &)
 tail -f -n0 /root/logs/client.log | grep -qe 'Started ClientApplication'
+
 sleep 5
+
 echo
 echo '>>> READY TO RUN <<<'
 

@@ -18,6 +18,7 @@ $ docker run --rm -p 8080:8092 -p 8500:8500 -p 8600:8600/udp -p 8761:8761 labuti
 >>> Starting isu instance 2
 >>> Starting isu instance 3
 >>> Starting Zuul proxy
+>>> Starting client application
 
 >>> READY TO RUN <<<
 ```
