@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd  http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd">
+    <http:listener-config name="api-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8095" />
+    </http:listener-config>
+    <apikit:config name="api-config" api="api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="f023003b-2206-415e-b531-30e10e3431fd">
+        <wsc:connection wsdlLocation="http://localhost:8093/ws/schema.wsdl?wsdl" service="SchemaPortService" port="SchemaPortSoap11" address="http://localhost:8093/ws" />
+    </wsc:config>
+    <flow name="api-main">
+        <http:listener config-ref="api-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="api-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="api-console">
+        <http:listener config-ref="api-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="api-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="put:\group\(id):application\xml:api-config">
+        <logger level="INFO" message="put:\group\(id):application\xml:api-config" />
+        <ee:transform doc:name="Transform Message" doc:id="58a33475-f76d-47e5-aea5-9f5d60d1a382">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn="everywhere"
+ns ns0 http://ksulabut.org/soa/lab4
+---
+{
+  ns0#modifyGroupRequest: {
+  	ns0#id: attributes.uriParams.id,
+  	ns0#studyGroup: {
+  		ns0#name: payload.StudyGroup.name,
+  		ns0#coordinates: {
+  			ns0#x: payload.StudyGroup.coordinates.x,
+  			ns0#y: payload.StudyGroup.coordinates.y
+  		},
+  		ns0#studentsCount: payload.StudyGroup.studentsCount,
+  		ns0#formOfEducation: payload.StudyGroup.formOfEducation,
+  		ns0#semesterEnum: payload.StudyGroup.semesterEnum,
+  		ns0#groupAdmin: if (payload.StudyGroup.groupAdmin != null) {
+  			ns0#name: payload.StudyGroup.groupAdmin.name,
+  			ns0#passportID: payload.StudyGroup.groupAdmin.passportID,
+  			ns0#eyeColor: payload.StudyGroup.groupAdmin.eyeColor,
+  			ns0#hairColor: payload.StudyGroup.groupAdmin.hairColor,
+  			ns0#nationality: payload.StudyGroup.groupAdmin.nationality
+  		} else null
+  	}
+  }
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <wsc:consume doc:name="Consume" doc:id="484199a4-831e-4790-9dc3-b0a506e7557c" config-ref="Web_Service_Consumer_Config" operation="modifyGroup" />
+        <set-variable value="#[%dw 2.0&#xA;ns ns0 http://ksulabut.org/soa/lab4&#xA;---&#xA;payload.body.ns0#modifyGroupResponse.ns0#serviceStatus.ns0#statusCode]" doc:name="Set Variable" doc:id="62ee4c63-ef27-4b11-b4ab-db26d33533e5" variableName="httpStatus" />
+        <choice doc:name="Choice" doc:id="cd4f1ae3-a965-4b17-8130-1bb9120ac867">
+            <when expression="#[vars.httpStatus ~= 200]">
+                <ee:transform doc:name="Transform Message" doc:id="986a88f8-8c96-4c51-aa7d-490153ced31d">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://ksulabut.org/soa/lab4
+---
+StudyGroup: {
+	id: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#id,
+	name: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#name,
+	coordinates: {
+		x: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#coordinates.ns0#x,
+		y: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#coordinates.ns0#y
+	},
+	creationDate: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#creationDate,
+	studentsCount: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#studentsCount,
+	formOfEducation: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#formOfEducation,
+	semesterEnum: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#semesterEnum,
+	(groupAdmin: {
+		name: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#name,
+		passportID: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#passportID,
+		eyeColor: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#eyeColor,
+		hairColor: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#hairColor,
+		nationality: payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#nationality,
+	}) if (payload.body.ns0#modifyGroupResponse.ns0#studyGroup.ns0#groupAdmin != null)
+}]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <set-payload value="#[null]" doc:name="Set Payload" doc:id="b952b4c6-be2c-4de0-9a8f-ca87343b7fd4" />
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="delete:\group\(id):api-config">
+        <logger level="INFO" message="delete:\group\(id):api-config" />
+        <ee:transform doc:name="Transform Message" doc:id="966e2af3-29b1-4d8a-8c4a-a2aebc881982">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn="everywhere"
+ns ns0 http://ksulabut.org/soa/lab4
+---
+{
+	ns0#deleteGroupRequest: {
+		ns0#id: attributes.uriParams.id
+	}
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <wsc:consume doc:name="Consume" doc:id="c571c066-935e-40c4-891e-6a410a511f12" config-ref="Web_Service_Consumer_Config" operation="deleteGroup" />
+        <set-variable value="#[%dw 2.0&#xA;ns ns0 http://ksulabut.org/soa/lab4&#xA;---&#xA;payload.body.ns0#deleteGroupResponse.ns0#serviceStatus.ns0#statusCode]" doc:name="Set Variable" doc:id="96230a2c-07b1-47c2-8590-a55391af9d7e" variableName="httpStatus" />
+        <set-payload value="#[null]" doc:name="Set Payload" doc:id="c4e1cd4e-7915-4924-aec0-f19875c77089" />
+    </flow>
+    <flow name="options:\count_expelled:api-config">
+        <logger level="INFO" message="options:\count_expelled:api-config" />
+    </flow>
+    <flow name="options:\group:api-config">
+        <logger level="INFO" message="options:\group:api-config" />
+    </flow>
+    <flow name="options:\group\edu_forms:api-config">
+        <logger level="INFO" message="options:\group\edu_forms:api-config" />
+    </flow>
+    <flow name="options:\group\prefix:api-config">
+        <logger level="INFO" message="options:\group\prefix:api-config" />
+    </flow>
+    <flow name="options:\group\semester\(semester):api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="semester">attributes.uriParams.'semester'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <logger level="INFO" message="options:\group\semester\(semester):api-config" />
+    </flow>
+    <flow name="options:\group\(id):api-config">
+        <ee:transform>
+            <ee:variables>
+                <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <logger level="INFO" message="options:\group\(id):api-config" />
+    </flow>
+    <flow name="get:\count_expelled:api-config">
+        <logger level="INFO" message="get:\count_expelled:api-config" />
+        <ee:transform doc:name="Transform Message" doc:id="a76a98cc-17fe-4318-a7c8-d43bccf704b2">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn="everywhere"
+ns ns0 http://ksulabut.org/soa/lab4
+---
+{
+  ns0#countExpelledRequest: {
+  }
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <wsc:consume operation="countExpelled" doc:name="Consume" doc:id="a771e4fd-dc3b-44e2-af95-60eb6a3d497a" config-ref="Web_Service_Consumer_Config" />
+        <set-variable value="#[%dw 2.0&#xA;ns ns0 http://ksulabut.org/soa/lab4&#xA;---&#xA;payload.body.ns0#countExpelledResponse.ns0#serviceStatus.ns0#statusCode]" doc:name="Set Variable" doc:id="143bb381-7e94-4c40-963d-f08af9338b4c" variableName="httpStatus" />
+        <choice doc:name="Choice" doc:id="60ec2ecb-6a49-464a-b125-41c5225080dc">
+            <when expression="#[vars.httpStatus ~= 200]">
+                <ee:transform doc:name="Transform Message" doc:id="dd72a857-1a61-48d5-a5b5-7d248a50b585">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://ksulabut.org/soa/lab4
+---
+Integer: payload.body.ns0#countExpelledResponse.ns0#countExpelled]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <set-payload value="#[null]" doc:name="Set Payload" doc:id="4ddd59db-dc03-4f90-a0ac-b44b29d20be5" />
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="get:\group:api-config">
+        <logger level="INFO" message="get:\group:api-config" />
+        <ee:transform doc:name="Transform Message" doc:id="eefee2ca-fe82-45e3-a7d8-a94da5a15761">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn="everywhere"
+ns ns0 http://ksulabut.org/soa/lab4
+---
+{
+  ns0#getAllGroupsRequest: {
+    ns0#pageNumber: attributes.queryParams.pageNumber,
+    ns0#pageSize: attributes.queryParams.pageSize,
+    ns0#sortType: attributes.queryParams.sortType,
+    ns0#orderBy: attributes.queryParams.orderBy,
+    ns0#filterBy: attributes.queryParams.filterBy default ""
+  }
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <wsc:consume doc:name="Consume" doc:id="5818cf67-cd27-458d-9a29-586c4ea0cc9a" config-ref="Web_Service_Consumer_Config" operation="getAllGroups" />
+        <set-variable value="#[%dw 2.0&#xA;ns ns0 http://ksulabut.org/soa/lab4&#xA;---&#xA;payload.body.ns0#getAllGroupsResponse.ns0#serviceStatus.ns0#statusCode]" doc:name="Set Variable" doc:id="3eb2fc57-4b28-4ae0-86a4-edf0406acb1d" variableName="httpStatus" />
+        <choice doc:name="Choice" doc:id="36264055-570e-40ec-b871-4b51c3007e5e">
+            <when expression="#[vars.httpStatus ~= 200]">
+                <ee:transform doc:name="Transform Message" doc:id="09b7f00a-b395-4c13-a204-6f378ea185d8">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://ksulabut.org/soa/lab4
+---
+List: {
+	(item: payload.body.ns0#getAllGroupsResponse.*ns0#studyGroup map (sg, index) -> {
+		id: sg.ns0#id,
+		name: sg.ns0#name,
+		coordinates: {
+			x: sg.ns0#coordinates.ns0#x,
+			y: sg.ns0#coordinates.ns0#y
+		},
+		creationDate: sg.ns0#creationDate,
+		studentsCount: sg.ns0#studentsCount,
+		formOfEducation: sg.ns0#formOfEducation,
+		semesterEnum: sg.ns0#semesterEnum,
+		(groupAdmin: {
+			name: sg.ns0#groupAdmin.ns0#name,
+			passportID: sg.ns0#groupAdmin.ns0#passportID,
+			eyeColor: sg.ns0#groupAdmin.ns0#eyeColor,
+			hairColor: sg.ns0#groupAdmin.ns0#hairColor,
+			nationality: sg.ns0#groupAdmin.ns0#nationality,
+		}) if (sg.ns0#groupAdmin != null)
+	}) if (payload.body.ns0#getAllGroupsResponse.ns0#studyGroup != null)
+}]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <set-payload value="#[null]" doc:name="Set Payload" doc:id="39d2cc82-cad0-45b5-aae3-734c2c057b51" />
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="get:\group\edu_forms:api-config">
+        <logger level="INFO" message="get:\group\edu_forms:api-config" />
+        <ee:transform doc:name="Transform Message" doc:id="b5e4d5e4-9718-422e-bf64-bd916150f645">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn="everywhere"
+ns ns0 http://ksulabut.org/soa/lab4
+---
+{
+  ns0#getUniqueFormsRequest: {
+  }
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <wsc:consume operation="getUniqueForms" doc:name="Consume" doc:id="5ee642a1-321c-4422-bf08-51a3a60206e4" config-ref="Web_Service_Consumer_Config" />
+        <set-variable value="#[%dw 2.0&#xA;ns ns0 http://ksulabut.org/soa/lab4&#xA;---&#xA;payload.body.ns0#getUniqueFormsResponse.ns0#serviceStatus.ns0#statusCode]" doc:name="Set Variable" doc:id="54a07a78-c6f1-4fcd-b622-56e766ed9320" variableName="httpStatus" />
+        <choice doc:name="Choice" doc:id="8aca9afa-a3e8-408d-97b7-cec421558bb6">
+            <when expression="#[vars.httpStatus ~= 200]">
+                <ee:transform doc:name="Transform Message" doc:id="c3036719-2d7a-482c-ae1e-301f16fa69c7">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://ksulabut.org/soa/lab4
+---
+HashSet: {
+	(item: payload.body.ns0#getUniqueFormsResponse.*ns0#formOfEducation map (form, index) -> form) if (payload.body.ns0#getUniqueFormsResponse.ns0#formOfEducation != null)
+}]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <set-payload value="#[null]" doc:name="Set Payload" doc:id="d9e0160c-efbe-4c7a-a70a-6b566736a76f" />
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="get:\group\prefix:api-config">
+        <logger level="INFO" message="get:\group\prefix:api-config" />
+        <ee:transform doc:name="Transform Message" doc:id="5327d7af-111e-4c82-b8cd-8b08935f9618">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn="everywhere"
+ns ns0 http://ksulabut.org/soa/lab4
+---
+{
+  ns0#getStartsFromRequest: {
+    ns0#prefix: attributes.queryParams.prefix
+  }
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <wsc:consume doc:name="Consume" doc:id="378d208c-3cdb-483e-bc6b-0910007a79cf" config-ref="Web_Service_Consumer_Config" operation="getStartsFrom" />
+        <set-variable value="#[%dw 2.0&#xA;ns ns0 http://ksulabut.org/soa/lab4&#xA;---&#xA;payload.body.ns0#getStartsFromResponse.ns0#serviceStatus.ns0#statusCode]" doc:name="Set Variable" doc:id="925bb373-d089-4c5f-b2b6-68aae0fb847b" variableName="httpStatus" />
+        <choice doc:name="Choice" doc:id="403c6e4a-c1b7-479a-8629-bbc377709ee7">
+            <when expression="#[vars.httpStatus ~= 200]">
+                <ee:transform doc:name="Transform Message" doc:id="2c9b6888-d473-4ee0-adaf-40dee094b42d">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://ksulabut.org/soa/lab4
+---
+List: {
+	(item: payload.body.ns0#getStartsFromResponse.*ns0#studyGroup map (sg, index) -> {
+		id: sg.ns0#id,
+		name: sg.ns0#name,
+		coordinates: {
+			x: sg.ns0#coordinates.ns0#x,
+			y: sg.ns0#coordinates.ns0#y
+		},
+		creationDate: sg.ns0#creationDate,
+		studentsCount: sg.ns0#studentsCount,
+		formOfEducation: sg.ns0#formOfEducation,
+		semesterEnum: sg.ns0#semesterEnum,
+		(groupAdmin: {
+			name: sg.ns0#groupAdmin.ns0#name,
+			passportID: sg.ns0#groupAdmin.ns0#passportID,
+			eyeColor: sg.ns0#groupAdmin.ns0#eyeColor,
+			hairColor: sg.ns0#groupAdmin.ns0#hairColor,
+			nationality: sg.ns0#groupAdmin.ns0#nationality,
+		}) if (sg.ns0#groupAdmin != null)
+	}) if (payload.body.ns0#getStartsFromResponse.ns0#studyGroup != null)
+}]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <set-payload value="#[null]" doc:name="Set Payload" doc:id="ca896e76-3bf8-4e29-978e-c3f8f5203a8d" />
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="get:\group\semester\(semester):api-config">
+        <logger level="INFO" message="get:\group\semester\(semester):api-config" />
+        <ee:transform doc:name="Transform Message" doc:id="164c234c-e033-4a6d-af9b-6b733d8f2d9f">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn="everywhere"
+ns ns0 http://ksulabut.org/soa/lab4
+---
+{
+	ns0#countHigherSemesterRequest: {
+		ns0#semester: attributes.uriParams.semester
+	}
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <wsc:consume operation="countHigherSemester" doc:name="Consume" doc:id="e1ff66b5-0046-403a-b2da-6bd5a45ec633" config-ref="Web_Service_Consumer_Config" />
+        <set-variable value="#[%dw 2.0&#xA;ns ns0 http://ksulabut.org/soa/lab4&#xA;---&#xA;payload.body.ns0#countHigherSemesterResponse.ns0#serviceStatus.ns0#statusCode]" doc:name="Set Variable" doc:id="c790b275-1451-4fd9-97ee-8abc40cb4be1" variableName="httpStatus" />
+        <choice doc:name="Choice" doc:id="a51203b3-1cdd-4d03-8df8-041c53392e17">
+            <when expression="#[vars.httpStatus ~= 200]">
+                <ee:transform doc:name="Transform Message" doc:id="20bd2a5d-8671-4395-9781-3dfa453f4598">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://ksulabut.org/soa/lab4
+---
+Integer: payload.body.ns0#countHigherSemesterResponse.ns0#groupCount]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <set-payload value="#[null]" doc:name="Set Payload" doc:id="bde48c04-e6a7-4312-afef-54ce58fee14f" />
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="get:\group\(id):api-config">
+        <logger level="INFO" message="get:\group\(id):api-config" />
+        <ee:transform doc:name="Transform Message" doc:id="0b1f3698-de7f-490a-bd52-02faaa9d93fb">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn="everywhere"
+ns ns0 http://ksulabut.org/soa/lab4
+---
+{
+	ns0#getGroupByIdRequest: {
+		ns0#id: attributes.uriParams.id
+	}
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <wsc:consume doc:name="Consume" doc:id="7263bd97-ad1f-47e3-97a2-b665f293cc9a" config-ref="Web_Service_Consumer_Config" operation="getGroupById" />
+        <set-variable value="#[%dw 2.0&#xA;ns ns0 http://ksulabut.org/soa/lab4&#xA;---&#xA;payload.body.ns0#getGroupByIdResponse.ns0#serviceStatus.ns0#statusCode]" doc:name="Set Variable" doc:id="d2b58d27-b7ed-4e71-bc16-c2ffbd79fdfc" variableName="httpStatus" />
+        <choice doc:name="Choice" doc:id="372485b0-138f-4f94-ad54-90d8457d0dbf">
+            <when expression="#[vars.httpStatus ~= 200]">
+                <ee:transform doc:name="Transform Message" doc:id="1b0a1dfd-67e1-48fc-930b-14d6731653ec">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://ksulabut.org/soa/lab4
+---
+StudyGroup: {
+	id: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#id,
+	name: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#name,
+	coordinates: {
+		x: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#coordinates.ns0#x,
+		y: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#coordinates.ns0#y
+	},
+	creationDate: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#creationDate,
+	studentsCount: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#studentsCount,
+	formOfEducation: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#formOfEducation,
+	semesterEnum: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#semesterEnum,
+	(groupAdmin: {
+		name: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#groupAdmin.ns0#name,
+		passportID: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#groupAdmin.ns0#passportID,
+		eyeColor: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#groupAdmin.ns0#eyeColor,
+		hairColor: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#groupAdmin.ns0#hairColor,
+		nationality: payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#groupAdmin.ns0#nationality,
+	}) if (payload.body.ns0#getGroupByIdResponse.ns0#studyGroup.ns0#groupAdmin != null)
+}]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <set-payload value="#[null]" doc:name="Set Payload" doc:id="5e499451-e7ce-49f2-bd86-6140a79b93f6" />
+            </otherwise>
+        </choice>
+    </flow>
+    <flow name="post:\group:application\xml:api-config">
+        <logger level="INFO" message="post:\group:application\xml:api-config" />
+        <ee:transform doc:name="Transform Message" doc:id="ef8dfb9d-5001-45bb-a94a-35d69cdf1f6c">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/xml skipNullOn="everywhere"
+ns ns0 http://ksulabut.org/soa/lab4
+---
+{
+  ns0#addGroupRequest: {
+  	ns0#studyGroup: {
+  		ns0#name: payload.StudyGroup.name,
+  		ns0#coordinates: {
+  			ns0#x: payload.StudyGroup.coordinates.x,
+  			ns0#y: payload.StudyGroup.coordinates.y
+  		},
+  		ns0#studentsCount: payload.StudyGroup.studentsCount,
+  		ns0#formOfEducation: payload.StudyGroup.formOfEducation,
+  		ns0#semesterEnum: payload.StudyGroup.semesterEnum,
+  		ns0#groupAdmin: if (payload.StudyGroup.groupAdmin != null) {
+  			ns0#name: payload.StudyGroup.groupAdmin.name,
+  			ns0#passportID: payload.StudyGroup.groupAdmin.passportID,
+  			ns0#eyeColor: payload.StudyGroup.groupAdmin.eyeColor,
+  			ns0#hairColor: payload.StudyGroup.groupAdmin.hairColor,
+  			ns0#nationality: payload.StudyGroup.groupAdmin.nationality
+  		} else null
+  	}
+  }
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+        <wsc:consume doc:name="Consume" doc:id="4c5f524c-cc60-4de2-8332-8230b62bda95" config-ref="Web_Service_Consumer_Config" operation="addGroup" />
+        <set-variable value="#[%dw 2.0&#xA;ns ns0 http://ksulabut.org/soa/lab4&#xA;---&#xA;payload.body.ns0#addGroupResponse.ns0#serviceStatus.ns0#statusCode]" doc:name="Set Variable" doc:id="30d9f8d1-e4fc-4aea-9b6d-6b8b990f2fd9" variableName="httpStatus" />
+        <choice doc:name="Choice" doc:id="3e5ed534-0ae8-4551-83c0-3804c959a06f">
+            <when expression="#[vars.httpStatus ~= 200]">
+                <ee:transform doc:name="Transform Message" doc:id="a28d90ec-f913-4eeb-8334-33569771ff69">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 http://ksulabut.org/soa/lab4
+---
+StudyGroup: {
+	id: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#id,
+	name: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#name,
+	coordinates: {
+		x: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#coordinates.ns0#x,
+		y: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#coordinates.ns0#y
+	},
+	creationDate: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#creationDate,
+	studentsCount: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#studentsCount,
+	formOfEducation: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#formOfEducation,
+	semesterEnum: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#semesterEnum,
+	(groupAdmin: {
+		name: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#name,
+		passportID: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#passportID,
+		eyeColor: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#eyeColor,
+		hairColor: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#hairColor,
+		nationality: payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#groupAdmin.ns0#nationality
+	}) if (payload.body.ns0#addGroupResponse.ns0#studyGroup.ns0#groupAdmin != null)
+}]]></ee:set-payload>
+                    </ee:message>
+                </ee:transform>
+            </when>
+            <otherwise>
+                <set-payload value="#[null]" doc:name="Set Payload" doc:id="9153ae83-cada-4c70-8594-c094ca9fbc2d" />
+            </otherwise>
+        </choice>
+    </flow>
+</mule>

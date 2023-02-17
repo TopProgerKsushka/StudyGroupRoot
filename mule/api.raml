@@ -1,0 +1,172 @@
+#%RAML 1.0
+title: Group API
+version: v1
+      
+types:
+  StudyGroup:
+    type: object
+    properties:
+      name:
+        type: string
+        required: false
+      coordinates:
+        type: object
+        required: true
+        properties:
+          x:
+            type: number
+            required: true
+          y:
+            type: number
+            required: true
+      studentsCount:
+        type: number
+        required: true
+      formOfEducation:
+        type: string
+        required: true
+      semesterEnum:
+        type: string
+        required: true
+      groupAdmin:
+        type: object
+        required: false
+        properties:
+          name:
+            type: string
+            required: true
+          passportID:
+            type: string
+            required: true
+          eyeColor:
+            type: string
+            required: true
+          hairColor:
+            type: string
+            required: true
+          nationality:
+            type: string
+            required: true
+
+/group:
+  options:
+    displayName: Options
+    responses:
+      200: {}
+  get:
+    queryParameters:
+      pageNumber:
+        type: number | nil
+        required: false
+      pageSize:
+        type: number | nil
+        required: false
+      sortType:
+        type: string
+        required: false
+      orderBy:
+        type: string
+        required: false
+      filterBy:
+        type: string
+        required: false
+    responses:
+      200:
+        body:
+          application/xml:
+            type: object
+      400:
+  post:
+    body:
+      application/xml:
+        type: StudyGroup
+        
+    responses:
+      200:
+        body:
+          application/xml:
+            type: object
+      400:
+
+/group/{id}:
+  options:
+    displayName: Options
+    responses:
+      200: {}
+  get:
+    responses:
+      200:
+        body:
+          application/xml:
+            type: object
+      404:
+      400:
+  put:
+    body:
+      application/xml:
+        type: StudyGroup
+    responses:
+      200:
+        body:
+          application/xml:
+            type: object
+      404:
+      400:
+  delete:
+    responses:
+      200:
+      404:
+      400:
+
+/group/semester/{semester}:
+  options:
+    displayName: Options
+    responses:
+      200: {}
+  get:
+    responses:
+      200:
+        body:
+          application/xml:
+            type: object
+      400:
+
+/group/prefix:
+  options:
+    displayName: Options
+    responses:
+      200: {}
+  get:
+    queryParameters:
+      prefix:
+        type: string
+        required: true
+    responses:
+      200:
+        body:
+          application/xml:
+            type: object
+
+/group/edu_forms:
+  options:
+    displayName: Options
+    responses:
+      200: {}
+  get:
+    responses:
+      200:
+        body:
+          application/xml:
+            type: object
+
+/count_expelled:
+  options:
+    displayName: Options
+    responses:
+      200: {}
+  get:
+    responses:
+      200:
+        body:
+          application/xml:
+            type: object
