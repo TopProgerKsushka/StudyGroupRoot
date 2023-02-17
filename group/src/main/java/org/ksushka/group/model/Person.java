@@ -26,4 +26,25 @@ public class Person {
     public Country getNationality() {
         return nationality;
     }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPassportID(String passportID) {
+        this.passportID = passportID;
+    }
+
+    public void setEyeColor(Color eyeColor) {
+        this.eyeColor = eyeColor;
+    }
+
+    public void setHairColor(Color hairColor) {
+        this.hairColor = hairColor;
+    }
+
+    public void setNationality(Country nationality) {
+        this.nationality = nationality;
+    }
 }

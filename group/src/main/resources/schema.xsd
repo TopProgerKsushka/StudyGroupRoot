@@ -1,0 +1,198 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://ksulabut.org/soa/lab4"
+           targetNamespace="http://ksulabut.org/soa/lab4"
+           elementFormDefault="qualified">
+
+    <xs:element name="getAllGroupsRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="pageNumber" type="xs:int" nillable="true"/>
+                <xs:element name="pageSize" type="xs:int" nillable="true"/>
+                <xs:element name="sortType" type="xs:string" default="asc"/>
+                <xs:element name="orderBy" type="xs:string" default="id"/>
+                <xs:element name="filterBy" type="xs:string" default=""/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllGroupsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+                <xs:element name="studyGroup" type="tns:soapStudyGroup" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addGroupRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="studyGroup" type="tns:soapStudyGroup"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="addGroupResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+                <xs:element name="studyGroup" type="tns:soapStudyGroup"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="getGroupByIdRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="getGroupByIdResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+                <xs:element name="studyGroup" type="tns:soapStudyGroup"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="modifyGroupRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+                <xs:element name="studyGroup" type="tns:soapStudyGroup"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="modifyGroupResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+                <xs:element name="studyGroup" type="tns:soapStudyGroup"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="deleteGroupRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="deleteGroupResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="countHigherSemesterRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="semester" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="countHigherSemesterResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+                <xs:element name="groupCount" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getStartsFromRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="prefix" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getStartsFromResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+                <xs:element name="studyGroup" type="tns:soapStudyGroup" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getUniqueFormsRequest">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getUniqueFormsResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+                <xs:element name="formOfEducation" type="xs:string" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="countExpelledRequest">
+        <xs:complexType>
+            <xs:sequence>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="countExpelledResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="serviceStatus" type="tns:serviceStatus"/>
+                <xs:element name="countExpelled" type="xs:int"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+<!--    Types     -->
+    
+    <xs:complexType name="serviceStatus">
+        <xs:sequence>
+            <xs:element name="statusCode" type="xs:int"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="soapStudyGroup">
+        <xs:sequence>
+            <xs:element name="id" type="xs:int" nillable="true"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="coordinates" type="tns:soapCoordinates"/>
+            <xs:element name="creationDate" type="xs:string" nillable="true"/>
+            <xs:element name="studentsCount" type="xs:int"/>
+            <xs:element name="formOfEducation" type="xs:string"/>
+            <xs:element name="semesterEnum" type="xs:string"/>
+            <xs:element name="groupAdmin" type="tns:soapPerson" nillable="true"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="soapCoordinates">
+        <xs:sequence>
+            <xs:element name="x" type="xs:int"/>
+            <xs:element name="y" type="xs:float"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="soapPerson">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="passportID" type="xs:string"/>
+            <xs:element name="eyeColor" type="xs:string"/>
+            <xs:element name="hairColor" type="xs:string"/>
+            <xs:element name="nationality" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

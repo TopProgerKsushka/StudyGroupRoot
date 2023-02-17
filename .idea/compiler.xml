@@ -11,6 +11,12 @@
       <module name="isu" target="17" />
       <module name="isu.main" target="17" />
       <module name="isu.test" target="17" />
+      <module name="StudyGroupRoot.group.ejb" target="17" />
+      <module name="StudyGroupRoot.group.ejb.main" target="17" />
+      <module name="StudyGroupRoot.group.ejb.test" target="17" />
+      <module name="StudyGroupRoot.group.service" target="17" />
+      <module name="StudyGroupRoot.group.service.main" target="17" />
+      <module name="StudyGroupRoot.group.service.test" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>

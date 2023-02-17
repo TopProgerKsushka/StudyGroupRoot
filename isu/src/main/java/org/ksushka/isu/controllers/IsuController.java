@@ -29,32 +29,33 @@ public class IsuController {
     @Value("${group.port}")
     private int groupPort;
 
-    @Value("${trust.store}")
-    private Resource trustStore;
-    @Value("${trust.store.password}")
-    private String trustStorePassword;
+//    @Value("${trust.store}")
+//    private Resource trustStore;
+//    @Value("${trust.store.password}")
+//    private String trustStorePassword;
     //SSLContexts.custom()
 
     @Autowired
     CheckService checkService;
 
     RestTemplate restTemplate() throws Exception {
-        SSLContext sslContext = new SSLContextBuilder()
-                .loadTrustMaterial(trustStore.getURL(), trustStorePassword.toCharArray())
-                .build();
-        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
-        HttpClient httpClient = HttpClients.custom()
-                .setSSLSocketFactory(socketFactory)
-                .build();
-        HttpComponentsClientHttpRequestFactory factory =
-                new HttpComponentsClientHttpRequestFactory(httpClient);
-        RestTemplate restTemplate = new RestTemplate(factory);
-
-//        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
-//        interceptors.add(new LoggingRequestInterceptor());
-//        restTemplate.setInterceptors(interceptors);
-
-        return restTemplate;
+//        SSLContext sslContext = new SSLContextBuilder()
+//                .loadTrustMaterial(trustStore.getURL(), trustStorePassword.toCharArray())
+//                .build();
+//        SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext);
+//        HttpClient httpClient = HttpClients.custom()
+//                .setSSLSocketFactory(socketFactory)
+//                .build();
+//        HttpComponentsClientHttpRequestFactory factory =
+//                new HttpComponentsClientHttpRequestFactory(httpClient);
+//        RestTemplate restTemplate = new RestTemplate(factory);
+//
+////        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+////        interceptors.add(new LoggingRequestInterceptor());
+////        restTemplate.setInterceptors(interceptors);
+//
+//        return restTemplate;
+        return new RestTemplate();
     }
 
     @PutMapping(value = "group/{id}/form", produces = MediaType.APPLICATION_XML_VALUE)
@@ -62,7 +63,7 @@ public class IsuController {
                                                  @RequestParam FormOfEducation form) throws Exception {
         try {
             RestTemplate rt = restTemplate();
-            String url = "https://localhost:" + groupPort + "/api/group/{id}";
+            String url = "http://localhost:" + groupPort + "/api/group/{id}";
             StudyGroup studyGroup = rt.getForObject(url, StudyGroup.class, id);
             if (studyGroup == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
@@ -71,7 +72,7 @@ public class IsuController {
             studyGroup.setId(null);
 
             RestTemplate rt1 = restTemplate();
-            url = "https://localhost:" + groupPort + "/api/group/{id}";
+            url = "http://localhost:" + groupPort + "/api/group/{id}";
             HttpHeaders headers = new HttpHeaders();
             List<MediaType> mt = new ArrayList<>(1);
             mt.add(MediaType.APPLICATION_XML);
@@ -95,7 +96,7 @@ public class IsuController {
     public ResponseEntity<Integer> countExpelled() throws Exception {
         try {
             RestTemplate rt = restTemplate();
-            final String url = "https://localhost:" + groupPort + "/api/count_expelled";
+            final String url = "http://localhost:" + groupPort + "/api/count_expelled";
             ResponseEntity<Integer> resp = rt.getForEntity(url, Integer.class);
 
             //if (resp == null) return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

@@ -30,6 +30,7 @@ public class StudyGroup implements Comparable<StudyGroup> {
     @JsonIgnore
     private Integer expelledStudents;
 
+    @JsonIgnore
     private List<String> fields;
 
     public List<String> getFields() {

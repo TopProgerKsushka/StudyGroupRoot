@@ -11,4 +11,8 @@ public class Coordinates {
     public Float getY() {
         return y;
     }
+
+    public void setX(int x) { this.x = x; }
+
+    public void setY(float y) { this.y = y; }
 }
